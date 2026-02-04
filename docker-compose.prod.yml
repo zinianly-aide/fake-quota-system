@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: container-registry.oracle.com/database/enterprise:23.5.0.0
+    container_name: oracle-db-prod
+    environment:
+      ORACLE_PWD: SYSTEM
+      ORACLE_DB: ORCL
+      ORACLE_SID: ORCLCDB
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+    networks:
+      - backend-network-prod
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fake-quota-backend-prod
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://db:8080
+      - ConnectionStrings__OracleConnection=Data Source=(DESCRIPTION=(ADDRESS_LIST=(PROTOCOL=TCP)(HOST=db)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=ORCL))(VERSION=2)(CHARACTERSET=AL32UTF8)(CONNECTION_CLASS=TNS:Network_Service_Name)();User Id=SYSTEM;Password=SYSTEM;Connection Pool Timeout=30;
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
+    networks:
+      - backend-network-prod
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  backend-network-prod:
+    driver: bridge
+
+volumes:
+  oracle_data:

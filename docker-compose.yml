@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+        - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__OracleConnection=${ORACLE_CONNECTION}
+      - Serilog__MinimumLevel=Information
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      ports:
+        - "8081:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  oracle:
+    image: container-registry.oracle.com/database/enterprise:19.3.0.0-ee
+    ports:
+      - "1521:1521"
+    environment:
+      - ORACLE_PWD=Oracle123
+      - ORACLE_SID=XE

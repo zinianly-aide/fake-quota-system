@@ -1,0 +1,40 @@
+# Binaries
+[DdDex]
+[DdDex64]
+*.suo
+*.user
+*.userosscache
+*.suo.cache
+*.cache
+project.lock.json
+*.lock.json
+
+# NuGet packages
+**/packages/*
+*.nupkg
+**/.nuget/packages/*
+
+# Visual Studio
+.vs/
+*.vscode/
+*.code-workspace/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V50
+.Spotlight-V100
+.Trashes
+
+# Build results
+[Bb]in/
+[Bb]in64/
+
+# .NET
+*.csproj.user
+*.csproj.vspscc
+
+# JetBrains Rider
+.idea/
+*.sln.iml

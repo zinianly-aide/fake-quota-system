@@ -1,319 +1,451 @@
-# Fake Quota Management System（假勤额度管理系统）
+# Fake Quota Management System (假勤额度管理系统)
 
-## 项目概述
+A .NET 8.0 + Blazor WebAssembly + Oracle Database system for managing fake employee leave quotas with multi-environment support.
 
-一个基于 ASP.NET Core + Entity Framework Core + Oracle 的假勤额度管理系统，支持陪护假类型管理、额度管理、工信息管理和 RDP 远程桌面管理。
+## 📋 Table of Contents
 
-## 技术栈
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [System Architecture](#system-architecture)
+- [Database Schema](#database-schema)
+- [API Endpoints](#api-endpoints)
+- [Frontend Structure](#frontend-structure)
+- [Deployment](#deployment)
+- [Development Setup](#development-setup)
+- [Contributing](#contributing)
 
-### 后端
-- **框架**: ASP.NET Core 8.0
-- **ORM**: Entity Framework Core 8.0
-- **数据库**: Oracle 23.5.0 Enterprise
-- **日志**: Serilog（控制台 + 文件）
-- **API 文档**: Swashbuckle/Swagger
+---
 
-### 前端（待开发）
-- **框架**: Blazor WebAssembly
-- **UI 库**: Bootstrap 5
+## 🎯 Features
 
-### 部署
-- **容器**: Docker + Docker Compose
+### ✅ Implemented Features
+
+#### 1. Quota Management (额度管理)
+- **Multi-region support**: 北京、深圳、北京护理、深圳护理
+- **Multi-apply type**: 年度/月度/时度
+- **Quota allocation**: 天额度、时额度、年额度
+- **Real-time monitoring**: 额度使用率监控
+- **Alerting**: 额度预警功能
+
+#### 2. Employee Leave Management (假勤管理)
+- **Employee management**: 员工 ID、名称、部门
+- **Leave types**: 陪护假（5天/7天/10天/15天）
+- **Application workflow**: 新建申请 → 签核 → 批准 → 额度分配
+- **Certificate management**: 关联证书管理
+- **Status tracking**: 活跃、禁用、已删除状态
+
+#### 3. System Features (系统功能)
+- **Multi-environment**: Development、Staging、Production
+- **Logging system**: Serilog 结构化日志
+- **Health checks**: 健康检查端点
+- **Swagger/OpenAPI**: 完整 API 文档
+- **CORS support**: 跨域访问支持
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+- **Framework**: .NET 8.0
+- **API**: ASP.NET Core Web API
+- **ORM**: Entity Framework Core
+- **Database**: Oracle Database
+- **Logging**: Serilog + Serilog.Sinks.Console
+- **Documentation**: Swagger/OpenAPI (Swashbuckle.AspNetCore.SwaggerGen)
+- **Configuration**: Microsoft.Extensions.Configuration
+
+### Frontend
+- **Framework**: Blazor WebAssembly
+- **UI Library**: Bootstrap 5.3
+- **HTTP Client**: Microsoft.Extensions.Http.Json
+- **Runtime**: .NET 8.0 WebAssembly
+
+### Infrastructure
+- **Containerization**: Docker + Docker Compose
+- **Web Server**: Nginx (for Blazor Wasm)
+- **Database**: Oracle Database (containerized)
+- **Cache**: Redis (containerized)
+- **Reverse Proxy**: Nginx
+
+### DevOps
+- **Version Control**: Git + GitHub
 - **CI/CD**: GitHub Actions
-- **远程部署**: SSH
+- **Environment Management**: Multiple configurations (dev/staging/prod)
 
 ---
 
-## 功能特性
+## 🏗️ System Architecture
 
-### 1. 陪护假类型管理
-- ✅ 查看所有陪护假类型
-- ✅ 新增陪护假类型
-- ✅ 编辑陪护假类型
-- ✅ 删除陪护假类型
+```
+┌─────────────┐      ┌──────────────┐      ┌──────────────┐      ┌──────────────┐
+│             │      │              │      │              │      │
+│   Blazor   │      │   .NET 8 API │      │    Oracle    │
+│  Wasm UI   │◄────▶│              │◄────▶│              │◄────▶│
+│             │      │              │      │              │      │
+│  (Frontend)  │      │   (Backend)    │      │ (Database)   │
+└─────────────┘      └──────────────┘      └──────────────┘      └──────────────┘
 
-### 2. 额度管理
-- ✅ 查看所有类型陪护假的剩余额度
-- ✅ 查看当前额度使用记录
-- ✅ 天额度设置
-- ✅ 时额度设置
-- ✅ 额度预警（低于阈值时提醒）
+┌─────────────┐
+│             │
+│   Nginx     │
+│  (Proxy)     │
+│   :8080      │
+└─────────────┘
+```
 
-### 3. 工信息管理
-- ✅ 查看所有工信息
-- ✅ 新增工信息
-- ✅ 更新工信息
-- ✅ 删除工信息
+### Project Structure
 
-### 4. RDP 远程桌面管理
-- ✅ 查看 RDP 任务状态
-- ✅ 创建 RDP 任务
-- ✅ 编辑 RDP 任务
-- ✅ 删除 RDP 任务
-- ✅ 远程桌面连接监控
-
-### 5. 签核流程
-- ✅ 陪护假申请时需要签核
-- ✅ 签核完成后自动更新目标表
-
----
-
-## 数据库设计
-
-### TNA_TBL_EMPLQUOTA（额度表）
-
-| 字段名 | 类型 | 说明 |
-|---------|------|---------|
-| REGION_ID | VARCHAR2(33) | 区域 ID |
-| QUOTA_SEQNO | NUMBER(20) | 配额序号 |
-| YEAR | VARCHAR2(4) | 年份 |
-| APPLICATION_TYPE | VARCHAR2(3) | 应用类型（北京/深圳/北京护理/深圳护理） |
-| DAY_AMOUNT | NUMBER(10,4) | 天额度 |
-| HOUR_AMOUNT | NUMBER(10,4) | 时额度 |
-| QUOTA_DAY_AMOUNT | NUMBER(10,4) | 赫日额度 |
-| QUOTA_HOUR_AMOUNT | NUMBER(10,4) | 赎时额度 |
-
-### TNA_TBL_EMPVL（陪护假表）
-
-| 字段名 | 类型 | 说明 |
-|---------|------|---------|
-| EMPID | VARCHAR2(6) | 员工 ID |
-| ACTIVITYNAME | VARCHAR2(30) | 陪护假类型名称 |
-| ACTIVITYDAY | VARCHAR2(30) | 陪护假天数 |
-| JOINCERTIFICATE | VARCHAR2(100) | 关联证书 |
-| STATUS | VARCHAR2(30) | 状态 |
-| CREATEEMPID | VARCHAR2(30) | 创建人员 ID |
-| CREATEEMPNAME | VARCHAR2(30) | 创建人员名称 |
-| CREATEDATE | VARCHAR2(30) | 创建时间 |
-| UPDATEEMPID | VARCHAR2(30) | 更新人员 ID |
-| UPDATEEMPNAME | VARCHAR2(30) | 更新人员名称 |
-| UPDATEDATE | VARCHAR2(30) | 更新时间 |
-| APPLYQUOTADAYS | NUMBER(20) | 申请天数 |
-| RDPPTASKID | VARCHAR2(100) | RDP 任务 ID |
-| RDPPNODEACCOUNT | VARCHAR2(4000) | RDP 节点账户 |
-| RDPPNODENUMBER | VARCHAR2(100) | RDP 节点名称 |
-| RDPPID | VARCHAR2(100) | RDP 节点 ID |
-| RDPPREVIEWERS | VARCHAR2(4000) | RDP 审阅人 |
-| RDPPID | VARCHAR2(100) | 申请类型（陪护假额度管理） |
-
----
-
-## 项目结构
-
-\`\`\`
+```
 fake-quota-system/
-├── backend/                   # .NET 8 后端 API
-│   ├── Controllers/         # API 控制器
-│   ├── Services/           # 业务逻辑服务
-│   ├── Models/            # 数据模型
-│   ├── Data/               # EF Core 数据访问
-│   ├── Helpers/            # 辅助类
-│   ├── Program.cs           # 程序入口
-│   ├── appsettings.json     # 配置文件
-├── frontend/                # Blazor 前端（待开发）
-│   ├── Pages/              # 页面组件
-│   ├── Shared/            # 共享组件
-│   ├── wwwroot/           # 静态资源
+├── backend/                  # .NET 8.0 Backend API
+│   ├── Controllers/         # API controllers
+│   ├── Services/           # Business logic services
+│   ├── Models/            # Data models
+│   ├── Data/               # EF Core data access
+│   ├── Helpers/            # Helper classes
+│   ├── Program.cs           # Program entry point
+│   └── appsettings.json     # Configuration
+├── frontend/                # Blazor WebAssembly frontend
+│   ├── Pages/              # Razor pages
+│   ├── Shared/             # Shared components
+│   ├── wwwroot/           # Static files
 │   └── Program.cs
-├── docs/                   # API 文档
-├── docker/                 # Docker 配置
-│   ├── Dockerfile
-│   ├── docker-compose.yml
-│   └── docker-compose.prod.yml
-├── scripts/                 # 部署脚本
+├── docker/                 # Docker configurations
+│   ├── Dockerfile.backend   # Backend Dockerfile
+│   ├── Dockerfile.frontend  # Frontend Dockerfile
+│   └── docker-compose.yml    # Multi-service compose
+├── docs/                   # API documentation (Swagger)
+├── scripts/                 # Deployment scripts
 └── .github/workflows/      # GitHub Actions CI/CD
-\`\`\`
+```
 
 ---
 
-## 快速开始
+## 📊 Database Schema
 
-### 后端开发
+### TNA_TBL_EMPLQUOTA (额度表)
+- `Id` (Long) - Primary key
+- `RegionId` (String) - 区域 ID (BJ/SZ)
+- `QuotaSeqNo` (Integer) - 配额序号
+- `Year` (Integer) - 年份
+- `ApplicationType` (String) - 应用类型
+- `DayAmount` (Decimal) - 天额度
+- `HourAmount` (Decimal) - 时额度
+- `QuotaDayAmount` (Decimal) - 年额度
+- `QuotaHourAmount` (Decimal) - 时额度
+- `Remarks` (String) - 备注
 
-\`\`\`bash
-# 进入后端目录
+### TNA_TBL_EMPVL (假勤表)
+- `Id` (Long) - Primary key
+- `EmpId` (String) - 工 ID
+- `ActivityName` (String) - 陪护假名称
+- `ActivityDay` (String) - 陪护假天数
+- `Certificate` (String) - 关联证书
+- `Status` (String) - 状态 (Active/Deleted)
+- `CreateEmpId` (String) - 创建人员 ID
+- `CreateEmpName` (String) - 创建人员名称
+- `CreateDate` (DateTime) - 创建时间
+- `UpdateEmpId` (String) - 更新人员 ID
+- `UpdateEmpName` (String) - 更新人员名称
+- `UpdateDate` (DateTime) - 更新时间
+- `ApplyQuotaDays` (Integer) - 申请天数
+- `Rdptaskid` (String) - RDP 任务 ID
+- `Rdppnodeaccount` (String) - RDP 节点账户
+- `Rdppnodenameber` (String) - RDP 节点名称
+- `Rdppid` (String) - RDP 节点 ID
+- `Rdppreviewers` (String) - RDP 审阅人
+- `Rdppid` (String) - 申请类型 (陪护假/额度管理)
+
+---
+
+## 🔌 API Endpoints
+
+### Health Endpoints
+- `GET /api/health` - Health check
+  - Returns system status and feature summary
+
+### Quota Management Endpoints
+- `GET /api/emplquota/all` - Get all quota types
+- `GET /api/emplquota/{id}` - Get quota type by ID
+- `POST /api/emplquota/create` - Create new quota type
+- `PUT /api/emplquota/{id}` - Update quota type
+- `DELETE /api/emplquota/{id}` - Delete quota type
+
+### Employee Leave Endpoints
+- `GET /api/empvl/all` - Get all employees
+- `GET /api/empvl/active` - Get active employees
+- `POST /api/empvl/create` - Create new employee
+- `PUT /api/empvl/{id}/update` - Update employee
+- `DELETE /api/empvl/{id}` - Delete employee
+
+### Application Service Endpoints
+- `GET /api/application/summary` - Get system summary
+- `GET /api/application/pending` - Get pending approvals
+- `POST /api/application/new` - Create new application
+- `POST /api/application/approve` - Approve application
+- `POST /api/application/update-usage` - Update quota usage
+
+---
+
+## 🎨 Frontend Structure
+
+### Pages (前端页面)
+- `Index.razor` - Dashboard (系统概览)
+  - 额度概览
+  - 员工管理统计
+  - 系统状态
+
+- `EmplQuota.razor` - Quota Management (额度管理)
+  - 额度类型列表
+  - 编辑/删除额度类型
+  - 额度使用预警
+
+- `Empvl.razor` - Employee Leave Management (假勤管理)
+  - 员工列表
+  - 编辑/删除员工
+  - 签核管理
+
+- `QuotaUsage.razor` - Quota Usage (额度使用记录)
+  - 额度使用统计
+  - 区域使用分布
+  - 使用率分析
+
+- `NewApplication.razor` - New Application (新建申请)
+  - 新增陪护假申请
+  - 申请表单
+  - 审核流程说明
+
+### Shared Components
+- Navigation menu
+- Status indicators
+- Alert modals
+- Data tables
+
+---
+
+## 🚀 Deployment
+
+### Development Environment
+```bash
+# Clone repository
+git clone https://github.com/zinianly-aide/fake-quota-system.git
+
+# Navigate to project directory
+cd fake-quota-system
+
+# Start services with docker-compose
+docker-compose up -d
+
+# Access application
+# Frontend: http://localhost:8081
+# Backend API: http://localhost:8080
+# Swagger UI: http://localhost:8080/swagger
+```
+
+### Staging Environment
+```bash
+# Set environment variables
+export ASPNETCORE_ENVIRONMENT=Staging
+export ConnectionStrings__OracleConnection=${ORACLE_CONNECTION_STAGING}
+export Serilog__MinimumLevel=Warning
+
+# Build and deploy
+docker-compose -f docker-compose.yml up -d
+```
+
+### Production Environment
+```bash
+# Set environment variables
+export ASPNETCORE_ENVIRONMENT=Production
+export ConnectionStrings__OracleConnection=${ORACLE_CONNECTION_PRODUCTION}
+export Serilog__MinimumLevel=Error
+
+# Build and deploy
+docker-compose -f docker-compose.yml up -d
+```
+
+### Environment Switching
+```bash
+# Switch to development
+export ASPNETCORE_ENVIRONMENT=Development
+
+# Switch to production
+export ASPNETCORE_ENVIRONMENT=Production
+
+# Reload application
+docker-compose restart backend frontend
+```
+
+---
+
+## 🛠️ Development Setup
+
+### Prerequisites
+- **.NET 8.0 SDK**: Download and install
+- **Docker**: Install Docker Desktop
+- **Oracle Database**: Oracle Database instance
+- **Git**: Git command line tools
+
+### Local Development (Without Docker)
+```bash
+# Navigate to backend directory
 cd backend
 
-# 还原依赖
+# Restore dependencies
 dotnet restore
 
-# 构建解决方案
+# Build project
 dotnet build --configuration Release
 
-# 运行应用
+# Run application
 dotnet run
-\`\`\`
 
-### 部署到生产环境
+# Access Swagger UI
+# http://localhost:8080/swagger
+```
 
-\`\`\`bash
-# 使用生产环境配置
-docker-compose -f docker-compose.prod.yml up -d
+### Frontend Development
+```bash
+# Navigate to frontend directory
+cd frontend
 
-# 查看 Oracle 数据库连接
-docker-compose exec backend docker-compose -f docker-compose.prod.yml db sqlplus / as sysdba
+# Restore dependencies
+dotnet restore
 
-# 查看应用日志
-docker-compose logs backend -f docker-compose.prod.yml
-\`\`\`
+# Run Blazor application
+dotnet watch run
 
-### 本地开发环境配置
+# Access application
+# http://localhost:8081
+```
 
-复制 `.env.example` 到 `.env` 并配置：
+### Database Configuration
+```bash
+# Configure Oracle connection
+export ORACLE_CONNECTION="Data Source=(DESCRIPTION=(ADDRESS_LIST=(localhost:1521))(CONNECT_DATA=(HOST=1521)(PORT=1521))(SERVICE_NAME=ORCL);User Id=system;Password=oracle1234;"
 
-\`\`\`bash
-# Oracle 连接字符串
-ConnectionStrings__OracleConnection=Data Source=(DESCRIPTION=(ADDRESS_LIST=(PROTOCOL=TCP)(HOST=your_oracle_host)(PORT=1521));User Id=SYSTEM;Password=your_password;Connection Pool Timeout=30;
-
-# MySQL 连接字符串（如果需要）
-ConnectionStrings__MySqlConnection=Server=localhost;Database=fakequota;Uid=root;Pwd=your_password;
-\`\`\`
-
----
-
-## API 端点
-
-### Swagger/OpenAPI 文档
-- **Swagger UI**: `http://localhost:8080/swagger`
-- **API 端点**: `/api`
-- **健康检查**: `/api/health`
-
-### 主要 API
-
-| 功能 | 端点 | 方法 | 说明 |
-|------|------|------|---------|
-| 陪护假类型 | GET `/api/empltype` | 获取所有类型 |
-|  | GET `/api/empltype/{id}` | 获取单个类型 |
-|  | POST `/api/empltype` | 创建类型 |
-|  | PUT `/api/empltype/{id}` | 更新类型 |
-|  | DELETE `/api/empltype/{id}` | 删除类型 |
-| 额度 | GET `/api/quota` | 获取所有额度 |
-|  | GET `/api/quota/empltype/{emplTypeId}` | 获取类型额度 |
-|  | POST `/api/quota` | 设置额度 |
-| 工信息 | GET `/api/jobs` | 获取所有工信息 |
-|  | POST `/api/jobs` | 创建工信息 |
-|  | PUT `/api/jobs/{id}` | 更新工信息 |
-|  | DELETE `/api/jobs/{id}` | 删除工信息 |
-| RDP 任务 | GET `/api/rdp` | 获取所有 RDP 任务 |
-|  | POST `/api/rdp` | 创建 RDP 任务 |
-| RDP 任务 | PUT `/api/rdp/{id}` | 更新 RDP 任务 |
-| RDP 任务 | DELETE `/api/rdp/{id}` | 删除 RDP 任务 |
+# Test connection
+cd backend
+dotnet run
+```
 
 ---
 
-## 部署说明
+## 📝 API Documentation
 
-### 开发环境
-1. 克隆项目：\`git clone https://github.com/zinianly-aide/fake-quota-system.git\`\`
-2. 进入项目目录：\`cd fake-quota-system\`\`
-3. 还原依赖：\`dotnet restore\`\`
-4. 构建项目：\`dotnet build --configuration Release\`\`
-5. 运行应用：\`dotnet run\`\`
+### Swagger UI
+- **Production**: `http://your-domain.com/swagger`
+- **Staging**: `http://staging.your-domain.com/swagger`
+- **Development**: `http://localhost:8080/swagger`
 
-### 生产环境
-1. 连接到生产服务器
-2. 使用 SSH 工具或 Docker 部署
-3. 运行 Docker Compose：\`docker-compose -f docker-compose.prod.yml up -d\`\`
+### API Examples
 
-### 数据库迁移
+#### Get All Quota Types
+```bash
+curl -X GET "http://localhost:8080/api/emplquota/all" \
+  -H "accept: application/json"
+```
 
-如果需要迁移数据库，可以运行：
+#### Create New Quota Type
+```bash
+curl -X POST "http://localhost:8080/api/emplquota/create" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "regionId": "BJ",
+    "quotaSeqNo": 1,
+    "year": 2025,
+    "applicationType": "北京",
+    "dayAmount": 365,
+    "hourAmount": 365 * 24,
+    "quotaDayAmount": 365,
+    "quotaHourAmount": 365 * 24 * 60,
+    "remarks": "北京年度额度"
+  }'
+```
 
-\`\`\`bash
-# 使用 EF Core 迁移
-dotnet ef migrations add InitialCreate
-
-# 应用迁移
-dotnet ef database update
-
-# 生成 SQL 脚本
-dotnet ef migrations script
-\`\`\`
-
----
-
-## 注意事项
-
-### 安全
-- ✅ 所有数据库连接使用加密的连接字符串
-- ✅ API 端点需要身份验证（生产环境）
-- ✅ 敏感数据脱敏处理
-- ✅ 定期更新 Oracle 密码
-
-### 性能优化
-- ✅ 使用 EF Core 查询缓存
-- ✅ 数据库连接池配置
-- ✅ API 响应压缩（大数据）
-- ✅ 分页查询支持
-
-### 日志管理
-- ✅ 结构化日志（Serilog）
-- ✅ 日志级别配置（开发/生产）
-- ✅ 日志文件轮转（每天一个文件）
-- ✅ 日志保留 30 天
-
-### 监控
-- ✅ 应用健康检查端点
-- ✅ Serilog 指标收集
-- ✅ Oracle 数据库监控
-- ✅ Docker 容器监控
+#### Get Employee Summary
+```bash
+curl -X GET "http://localhost:8080/api/application/summary" \
+  -H "accept: application/json"
+```
 
 ---
 
-## 开发规范
+## 🤝 Contributing
 
-### 代码规范
-- 遵循 .NET 编码规范
-- 使用异步编程模式
-- 异常处理和日志记录
-- 代码注释清晰
+### Code Style
+- Follow C# coding standards
+- Use meaningful variable and method names
+- Add XML documentation to public methods
+- Keep methods small and focused
 
-### Git 规范
-- 功能分支开发（feature/*）
-- 修复分支（fix/*）
-- 提交信息清晰明确
-- 主分支受保护（main）
-- 使用 Pull Request 进行代码审查
+### Pull Request Process
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/your-feature`)
+3. Make your changes
+4. Commit changes (`git commit -m "Add your feature"`)
+5. Push to the branch (`git push origin feature/your-feature`)
+6. Create a Pull Request
+
+### Code Review Checklist
+- Code follows coding standards
+- Code is properly formatted
+- API endpoints are tested
+- Database migrations are included
+- Documentation is updated
+
+### Issue Reporting
+- Use GitHub Issues for bug reports
+- Include steps to reproduce
+- Include expected behavior
+- Include actual behavior
 
 ---
 
-## 贡献指南
+## 📊 Environment Variables
 
-欢迎贡献！请遵循以下规范：
+### Application Configuration
+- `ASPNETCORE_ENVIRONMENT` - Environment (Development/Staging/Production)
+- `ConnectionStrings__OracleConnection` - Oracle database connection string
+- `Serilog__MinimumLevel` - Minimum log level (Debug/Info/Warning/Error)
+- `ORACLE_PWD` - Oracle password file location
+- `ORACLE_SID` - Oracle system identifier
 
-1. Fork 项目仓库
-2. 创建功能分支（feature/your-feature-name）
-3. 提交 Pull Request
-4. 等待代码审查通过
-5. 合并到主分支
+### Example `.env` file
+```bash
+# Environment
+ASPNETCORE_ENVIRONMENT=Development
+
+# Database Connection
+ConnectionStrings__OracleConnection=Data Source=(DESCRIPTION=(ADDRESS_LIST=(localhost:1521))(CONNECT_DATA=(HOST=1521)(PORT=1521))(SERVICE_NAME=ORCL);User Id=system;Password=oracle1234;
+
+# Logging
+Serilog__MinimumLevel=Information
+```
 
 ---
 
-## 许可证
+## 📚 License
 
 MIT License
 
-Copyright (c) 2026 OpenClaw Agent. All rights reserved.
+## 📧 Contact
+
+For support and questions, please open an issue in the GitHub repository.
+
+## 🙏 Acknowledgments
+
+- **.NET 8.0** - Microsoft
+- **Blazor** - Microsoft
+- **Bootstrap** - Bootstrap
+- **Oracle Database** - Oracle Corporation
+- **Entity Framework Core** - Microsoft
+- **Serilog** - Serilog
+- **Swagger/OpenAPI** - Swashbuckle
+- **Docker** - Docker, Inc.
 
 ---
 
-## 联系方式
-
-如有问题或建议，请通过以下方式联系：
-
-- GitHub Issues: [https://github.com/zinianly-aide/fake-quota-system/issues](https://github.com/zinianly-aide/fake-quota-system/issues)
-
----
-
-## 更新日志
-
-### v1.0.0 (2026-02-04)
-- 初始版本
-- 后端 API（ASP.NET Core 8.0 + EF Core + Oracle）
-- Docker 支持（开发和生产环境）
-- GitHub Actions CI/CD 工作流
-- 完整的文档
-
----
-
-**感谢使用 Fake Quota Management System！**
+**Project created by OpenClaw Agent**
+**Version**: 1.0.0
+**Last Updated**: 2026-02-04

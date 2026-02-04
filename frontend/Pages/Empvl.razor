@@ -1,0 +1,66 @@
+@page "/"
+@model "FakeQuotaSystem.Models.Empvl"
+@inject IConfiguration Configuration
+
+<div class="container">
+    <h1 class="display-4">📋 员工管理</h1>
+    <p class="text-muted">查看、编辑、删除陪护假名称和配置</p>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3>🔍 员工列表</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>工 ID</th>
+                        <th>工 ID</th>
+                        <th>陪护假类型</th>
+                        <th>陪护假天数</th>
+                        <th>关联证书</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th>更新时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var emp in Model.Empvls)
+                    {
+                        <tr>
+                            <td>@emp.Id</td>
+                            <td>@emp.EmpId</td>
+                            <td>@emp.ActivityName</td>
+                            <td>@emp.ActivityDay</td>
+                            <td>@emp.Certificate</td>
+                            <td>@emp.Status</td>
+                            <td>@emp.CreateDate.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@emp.UpdateDate.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning">编辑</button>
+                                <button class="btn btn-sm btn-danger">删除</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3>📝 新增员工</h3>
+        </div>
+        <div class="card-body">
+            <EditForm Model="FakeQuotaSystem.Models.Empvl" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? _newEmpId;
+    private string? _newActivityName;
+    private string? _newActivityDay;
+    private string? _newCertificate;
+}

@@ -1,0 +1,88 @@
+@page "/"
+@model "FakeQuotaSystem.Models.Empvl"
+@inject IConfiguration Configuration
+
+<div class="container">
+    <h1 class="display-4">📝 额度使用记录</h1>
+    <div class="alert alert-info">
+        <strong>ℹ️ 功能开发中...</strong>
+        <p>额度使用记录功能正在开发中</p>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3>📊 额度使用统计</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <h4>年度额度使用</h4>
+                        <p>2025 年度总使用量：<strong>1,250,000 天</strong></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <h4>月度使用</h4>
+                        <p>2025 年 1 月使用量：<strong>120,000 天</strong></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <h4>日均使用</h4>
+                        <p>日均使用量：<strong>4,000 天</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3>📊 区域额度使用</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>区域</th>
+                        <th>年度额度</th>
+                        <th>已使用</th>
+                        <th>剩余额度</th>
+                        <th>使用率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>北京</td>
+                        <td>365,000</td>
+                        <td>250,000</td>
+                        <td>115,000</td>
+                        <td>68.5%</td>
+                    </tr>
+                    <tr>
+                        <td>深圳</td>
+                        <td>730,000</td>
+                        <td>500,000</td>
+                        <td>230,000</td>
+                        <td>68.5%</td>
+                    </tr>
+                    <tr>
+                        <td>北京护理</td>
+                        <td>365,000</td>
+                        <td>180,000</td>
+                        <td>185,000</td>
+                        <td>49.3%</td>
+                    </tr>
+                    <tr>
+                        <td>深圳护理</td>
+                        <td>730,000</td>
+                        <td>350,000</td>
+                        <td>380,000</td>
+                        <td>52.1%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

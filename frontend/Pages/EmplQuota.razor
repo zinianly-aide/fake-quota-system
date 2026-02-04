@@ -1,0 +1,57 @@
+@page "/"
+@model "FakeQuotaSystem.Models.EmplQuota"
+@inject IConfiguration Configuration
+
+<div class="container">
+    <h1 class="display-4">📋 陪护假管理</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>📊 陪护假类型列表</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>区域 ID</th>
+                                <th>区域名称</th>
+                                <th>配置额序号</th>
+                                <th>年份</th>
+                                <th>应用类型</th>
+                                <th>天额度</th>
+                                <th>时额度</th>
+                                <th>额度（日）</th>
+                                <th>额度（时）</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var type in Model.EmplQuotas)
+                            {
+                                <tr>
+                                    <td>@type.Id</td>
+                                    <td>@type.RegionId</td>
+                                    <td>@type.QuotaSeqNo</td>
+                                    <td>@type.Year</td>
+                                    <td>@type.ApplicationType</td>
+                                    <td>@type.DayAmount.ToString("F2")</td>
+                                    <td>@type.HourAmount.ToString("F2")</td>
+                                    <td>@type.QuotaDayAmount.ToString("F2")</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning">编辑</button>
+                                        <button class="btn btn-sm btn-danger">删除</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card-footer">
+                    <button class="btn btn-primary">+ 新增类型</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

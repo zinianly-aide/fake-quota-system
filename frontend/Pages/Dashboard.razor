@@ -1,0 +1,120 @@
+@page "/"
+@model "FakeQuotaSystem.Models.ApplicationModels"
+@inject IConfiguration Configuration
+
+<div class="container">
+    <h1 class="display-4">📊 系统概览</h1>
+    <p class="text-muted">假勤额度管理系统 - Dashboard</p>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h3>📋 陪护假管理</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="text-primary">@Model.TotalRegions</h4>
+                            <p class="lead">区域总数</p>
+                            <p class="display-4">4</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="text-success">@Model.TotalEmpvlTypes</h4>
+                            <p class="lead">员工类型总数</p>
+                            <p class="display-4">4</p>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h4 class="text-info">总应用数</h4>
+                        </div>
+                        <div class="col-md-8">
+                            <p class="display-4">@Model.TotalApplications</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h4 class="text-success">活跃应用数</h4>
+                        </div>
+                        <div class="col-md-8">
+                            <p class="display-4">@Model.ActiveApplications</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h4 class="text-warning">待审核数</h4>
+                        </div>
+                        <div class="col-md-8">
+                            <p class="display-4">@Model.PendingApprovals</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 员工管理</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="text-primary">@Model.TotalEmployees</h4>
+                                <p class="lead">员工总数</p>
+                                <p class="display-4">1,250</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="text-success">已发证书数</h4>
+                                <p class="lead">证书总数</p>
+                                <p class="display-4">980</p>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <h4>区域分布</h4>
+                        <div class="progress">
+                            <div class="progress-bar">
+                                <div class="progress-bar-item" style="width: 35%">
+                                    <span class="sr-only">北京</span>
+                                </div>
+                                <div class="progress-bar-item" style="width: 30%">
+                                    <span class="sr-only">深圳</span>
+                                </div>
+                                <div class="progress-bar-item" style="width: 20%">
+                                    <span class="sr-only">北京护理</span>
+                                </div>
+                                <div class="progress-bar-item" style="width: 15%">
+                                    <span class="sr-only">深圳护理</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📊 额度预警</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-danger">
+                                <strong>⚠️ 额度预警</strong>
+                                <p>以下区域已达到使用阈值：</p>
+                                <ul>
+                                    <li>深圳护理（使用率 52.1%）</li>
+                                    <li>北京护理（使用率 49.3%）</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>

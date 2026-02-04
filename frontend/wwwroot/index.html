@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Quota Management System - 假勤额度管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1 class="display-4">🏢 Fake Quota Management System</h1>
+            <p class="lead">假勤额度管理系统</p>
+            <p class="text-muted">.NET 8.0 + Blazor WebAssembly + Oracle Database</p>
+            
+            <div class="card mt-4">
+                <h3>📋 系统功能</h3>
+                <div class="list-group">
+                    <h5 class="list-group-item">📊 额度管理</h5>
+                    <ul>
+                        <li>查看管理（陪护假类型）</li>
+                        <li>查看员工（陪护假名称）</li>
+                        <li>额度预警（年/日/时）</li>
+                        <li>额度使用记录</li>
+                    </ul>
+                    
+                    <h5 class="list-group-item">📋 员工管理</h5>
+                    <ul>
+                        <li>新建陪护假申请（需要签核）</li>
+                        <li>签核流程管理</li>
+                        <li>签核完成状态更新</li>
+                        <li>审核批准管理</li>
+                    </ul>
+                    
+                    <h5 class="list-group-item">🔐 数据库</h5>
+                    <ul>
+                        <li>额度表（TNA_TBL_EMPLQUOTA）</li>
+                        <li>员工表（TNA_TBL_EMPVL）</li>
+                        <li>区域配置</li>
+                    </ul>
+                </div>
+                
+                <h3>💻 技术栈</h3>
+                <div class="list-group">
+                    <h5 class="list-group-item">后端</h5>
+                    <ul>
+                        <li>.NET 8.0</li>
+                        <li>ASP.NET Core Web API</li>
+                        <li>Entity Framework Core</li>
+                        <li>Oracle 数据库</li>
+                        <li>Serilog 日志</li>
+                        <li>Swagger API 文档</li>
+                    </ul>
+                    
+                    <h5 class="list-group-item">前端</h5>
+                    <ul>
+                        <li>Blazor WebAssembly</li>
+                        <li>Bootstrap 5 美观界面</li>
+                        <li>.NET 8.0 运行时</li>
+                    </ul>
+                    
+                    <h5 class="list-group-item">部署</h5>
+                    <ul>
+                        <li>Docker 容器化</li>
+                        <li>Docker Compose 多环境</li>
+                        <li>GitHub Actions CI/CD</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // 简单的页面加载提示
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('Fake Quota Management System loaded');
+            });
+        </script>
+</body>
+</html>

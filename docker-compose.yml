@@ -3,28 +3,64 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
+      target: build
     ports:
         - "8080:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__OracleConnection=${ORACLE_CONNECTION}
-      - Serilog__MinimumLevel=Information
+      - ConnectionStrings__OracleConnection=${ORACLE_CONNECTION:-Data Source=(DESCRIPTION=(ADDRESS_LIST=(localhost:1521))(CONNECT_DATA=(DESCRIPTION=(HOST=1521)(PORT=1521))(SERVICE_NAME=ORCL));User Id=system;Password=oracle1234;)}
+      - Serilog__MinimumLevel=${SERILOG_LEVEL:-Information}
+    networks:
+      - fake-quota-network
+    depends_on:
+      - oracle
+      - redis
+      - frontend
+    volumes:
+      - backend-data:/app/backend-data
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      ports:
-        - "8081:80"
+    ports:
+      - "8081:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+      - ApiUrl__Backend=http://backend:8080
+    networks:
+      - fake-quota-network
 
   oracle:
-    image: container-registry.oracle.com/database/enterprise:19.3.0.0-ee
+    image: container-registry.oracle.com/database/enterprise:19.3.0-ee
     ports:
       - "1521:1521"
     environment:
-      - ORACLE_PWD=Oracle123
+      - ORACLE_PWD=ORCL
       - ORACLE_SID=XE
+      - ORACLE_EDITION=xe
+      - ORACLE_CHARACTERSET=AL32UTF8
+    networks:
+      - fake-quota-network
+    volumes:
+      - oracle-data:/u01/app/oracle
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - fake-quota-network
+    volumes:
+      - redis-data:/data
+
+networks:
+  fake-quota-network:
+    driver: bridge
+
+volumes:
+  backend-data:
+  oracle-data:
+  redis-data:

@@ -1,66 +1,55 @@
-version: '3.8'
-
 services:
   backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
-      target: build
+    container_name: fake-quota-backend-dev
     ports:
-        - "8080:80"
+      - "18082:8080"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__OracleConnection=${ORACLE_CONNECTION:-Data Source=(DESCRIPTION=(ADDRESS_LIST=(localhost:1521))(CONNECT_DATA=(DESCRIPTION=(HOST=1521)(PORT=1521))(SERVICE_NAME=ORCL));User Id=system;Password=oracle1234;)}
-      - Serilog__MinimumLevel=${SERILOG_LEVEL:-Information}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__MySqlConnection=Server=mysql;Port=3306;Database=fakequota;User ID=fakequota;Password=fakequota_pass;
     networks:
       - fake-quota-network
     depends_on:
-      - oracle
-      - redis
-      - frontend
-    volumes:
-      - backend-data:/app/backend-data
+      mysql:
+        condition: service_healthy
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: nginx:alpine
+    container_name: fake-quota-frontend-dev
     ports:
-      - "8081:80"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ApiUrl__Backend=http://backend:8080
+      - "18081:80"
+    volumes:
+      - ./frontend/wwwroot:/usr/share/nginx/html:ro
     networks:
       - fake-quota-network
+    depends_on:
+      - backend
 
-  oracle:
-    image: container-registry.oracle.com/database/enterprise:19.3.0-ee
-    ports:
-      - "1521:1521"
+  mysql:
+    image: mysql:8.0
+    container_name: fake-quota-mysql-dev
     environment:
-      - ORACLE_PWD=ORCL
-      - ORACLE_SID=XE
-      - ORACLE_EDITION=xe
-      - ORACLE_CHARACTERSET=AL32UTF8
+      - MYSQL_DATABASE=fakequota
+      - MYSQL_USER=fakequota
+      - MYSQL_PASSWORD=fakequota_pass
+      - MYSQL_ROOT_PASSWORD=root_password
     networks:
       - fake-quota-network
     volumes:
-      - oracle-data:/u01/app/oracle
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    networks:
-      - fake-quota-network
-    volumes:
-      - redis-data:/data
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot_password || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
 
 networks:
   fake-quota-network:
     driver: bridge
 
 volumes:
-  backend-data:
-  oracle-data:
-  redis-data:
+  mysql-data:

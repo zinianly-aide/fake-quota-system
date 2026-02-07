@@ -1,0 +1,153 @@
+@page "/employee"
+@model "FakeQuotaSystem.Models.Empvl"
+@inject IConfiguration Configuration
+
+<div class="container">
+    <h1 class="display-4">📋 员工管理</h1>
+    <div class="alert alert-info mb-4">
+        <strong>ℹ️ 功能开发中...</strong>
+        <p>员工管理功能正在开发中，包括员工列表、新建、编辑和删除功能。</p>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3>🔍 员工列表</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>工 ID</th>
+                        <th>工 ID</th>
+                        <th>陪护假类型</th>
+                        <th>陪护假天数</th>
+                        <th>关联证书</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th>更新时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>EMP001</td>
+                        <td>北京-年度假</td>
+                        <td>5</td>
+                        <td>CERT-2025-001</td>
+                        <td><span class="badge bg-success">活跃</span></td>
+                        <td>2025-02-01 09:30</td>
+                        <td>2025-02-01 15:45</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>EMP001</td>
+                        <td>深圳-年度假</td>
+                        <td>7</td>
+                        <td>CERT-2025-002</td>
+                        <td><span class="badge bg-success">活跃</span></td>
+                        <td>2025-02-02 10:15</td>
+                        <td>-</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>EMP002</td>
+                        <td>北京-年度假</td>
+                        <td>10</td>
+                        <td>CERT-2025-003</td>
+                        <td><span class="badge bg-info">禁用</span></td>
+                        <td>2025-02-01 11:00</td>
+                        <td>2025-02-01 16:30</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>EMP002</td>
+                        <td>深圳-年度假</td>
+                        <td>7</td>
+                        <td>CERT-2025-004</td>
+                        <td><span class="badge bg-success">活跃</span></td>
+                        <td>2025-02-03 08:45</td>
+                        <td>-</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>EMP003</td>
+                        <td>北京护理假</td>
+                        <td>10</td>
+                        <td>CERT-2025-005</td>
+                        <td><span class="badge bg-success">活跃</span></td>
+                        <td>2025-02-03 09:00</td>
+                        <td>-</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>EMP003</td>
+                        <td>深圳护理假</td>
+                        <td>15</td>
+                        <td>CERT-2025-006</td>
+                        <td><span class="badge bg-warning">待审核</span></td>
+                        <td>2025-02-04 08:30</td>
+                        <td>-</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3>📝 新增员工</h3>
+        </div>
+        <div class="card-body">
+            <EditForm Model="FakeQuotaSystem.Models.Empvl">
+                <EditContext>
+                    <InputText @bind-Value="context.EmpId" placeholder="工 ID (如: EMP001)" />
+                    <InputText @bind-Value="context.ActivityName" placeholder="陪护假类型 (如: 北京-年度假)" />
+                    <InputText @bind-Value="context.ActivityDay" placeholder="天数" />
+                    <InputText @bind-Value="context.Certificate" placeholder="关联证书" />
+                    <InputText @bind-Value="context.CreateEmpId" placeholder="创建人员 ID" />
+                    <InputText @bind-Value="context.CreateEmpName" placeholder="创建人员名称" />
+                </EditContext>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? _newEmpId;
+    private string? _newActivityName;
+    private string? _newActivityDay;
+    private string? _newCertificate;
+    private string? _newCreateEmpId;
+    private string? _newCreateEmpName;
+    
+    private void CreateEmployee()
+    {
+        Console.WriteLine($"Creating new employee: {_newEmpId} - {_newActivityName}");
+        // TODO: Call API to create employee
+    }
+}

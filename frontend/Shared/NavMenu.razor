@@ -1,0 +1,51 @@
+@inherits LayoutComponentBase
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            🏢 Fake Quota System
+        </a>
+        <button class="navbar-toggler" @onclick="ToggleMenu" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="navbar-collapse @NavMenuCollapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/" Match="NavLink.All">
+                        <span class="oi oi-dashboard">📊</span> 系统概览
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/quota" Match="NavLink.All">
+                        <span class="oi oi-speedometer">📊</span> 额度管理
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/employee" Match="NavLink.All">
+                        <span class="oi oi-person">📋</span> 员工管理
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/application" Match="NavLink.All">
+                        <span class="oi oi-plus">📝</span> 新建申请
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/usage" Match="NavLink.All">
+                        <span class="oi oi-chart-line">📊</span> 额度使用
+                    </NavLink>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+@code {
+    private bool _navMenuCollapse = true;
+    
+    private void ToggleMenu()
+    {
+        _navMenuCollapse = !_navMenuCollapse;
+    }
+}

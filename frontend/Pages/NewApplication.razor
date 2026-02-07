@@ -1,46 +1,89 @@
-@page "/"
+@page "/application"
 @model "FakeQuotaSystem.Models.Empvl"
-@inject IConfiguration Configuration
 
 <div class="container">
-    <h1 class="display-4">📝 新增陪护假申请</h1>
-    <p class="text-muted">创建新的陪护假类型和名称，申请相应的额度</p>
+    <h1 class="display-4">📝 新建申请</h1>
+    <div class="alert alert-info mb-4">
+        <strong>ℹ️ 功能开发中...</strong>
+        <p>新建申请功能正在开发中，包括以下流程：</p>
+        <ol>
+            <li>选择陪护假类型</li>
+            <li>选择区域</li>
+            <li>选择天数</li>
+            <li>提交申请</li>
+            <li>等待签核</li>
+            <li>额度自动分配</li>
+        </ol>
+    </div>
     
-    <div class="card">
-        <EditForm Model="FakeQuotaSystem.Models.EmplQuota" />
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>📋 申请表单</h3>
+        </div>
+        <div class="card-body">
+            <EditForm Model="FakeQuotaSystem.Models.NewApplicationRequest">
+                <EditContext>
+                    <div class="form-group">
+                        <label for="regionId" class="form-label">区域</label>
+                        <InputText id="regionId" @bind-Value="context.RegionId" class="form-control" placeholder="选择区域" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="employeeId" class="form-label">工 ID</label>
+                        <InputText id="employeeId" @bind-Value="context.EmployeeId" class="form-control" placeholder="输入工 ID" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="days" class="form-label">申请天数</label>
+                        <InputNumber id="days" @bind-Value="context.Days" class="form-control" placeholder="输入天数" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="remarks" class="form-label">备注</label>
+                        <InputTextArea id="remarks" @bind-Value="context.Remarks" class="form-control" placeholder="输入备注信息" rows="3" />
+                    </div>
+                </EditContext>
+            </EditForm>
+        </div>
     </div>
     
     <div class="card">
-        <h3>📋 申请表单</h3>
-        <p class="text-muted">申请流程：</p>
-        <ol>
-            <li>选择陪护假类型（陪护假名称）</li>
-            <li>选择区域（北京/深圳/北京护理/深圳护理）</li>
-            <li>选择申请类型（年度/月度/时额度）</li>
-            <li>选择天数（陪护假天数）</li>
-            <li>填写备注信息</li>
-            <li>提交申请（需要签核）</li>
-            <li>等待审核批准</li>
-            <li>额度添加到目标表</li>
-        </ol>
-        
-        <div class="alert alert-info">
-            <strong>💡 提示</strong>
-            <p>所有申请都需要签核才能生效。签核完成后，额度会自动添加到目标表。</p>
+        <div class="card-header">
+            <h3>💡 提示</h3>
         </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <strong>⚠️ 需要签核</strong>
+                <p>所有申请都需要签核才能生效。签核完成后，额度会自动添加到目标表。</p>
+            </div>
+            <div class="alert alert-info">
+                <strong>💡 额度类型</strong>
+                <ul>
+                    <li>陪护假：5天/每年</li>
+                    <li>独生子女陪护假：7天/每年</li>
+                    <li>北京护理假：10天/每年</li>
+                    <li>深圳护理假：15天/每年</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center">
+        <button class="btn btn-primary" disabled="disabled">
+            <span class="oi oi-check"></span> 提交申请（功能开发中）
+        </button>
     </div>
 </div>
 
 @code {
     private string? _selectedRegionId;
-    private string? _selectedApplicationType;
-    private string? _selectedApplyType;
+    private string? _selectedEmployeeId;
     private int _selectedDays = 7;
     private string? _remarks;
     
     private void SubmitApplication()
     {
-        Console.WriteLine($"Submitting application: Region={_selectedRegionId}, ApplicationType={_selectedApplicationType}, Days={_selectedDays}");
+        Console.WriteLine($"Submitting application: Region={_selectedRegionId}, Employee={_selectedEmployeeId}, Days={_selectedDays}");
         // TODO: Call API to submit application
     }
 }

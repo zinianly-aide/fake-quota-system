@@ -3,78 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fake Quota Management System - 假勤额度管理系统</title>
+    <title>Fake Quota Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .app-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .loading-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .logo-icon {
+            font-size: 80px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="text-center">
-            <h1 class="display-4">🏢 Fake Quota Management System</h1>
-            <p class="lead">假勤额度管理系统</p>
-            <p class="text-muted">.NET 8.0 + Blazor WebAssembly + Oracle Database</p>
-            
-            <div class="card mt-4">
-                <h3>📋 系统功能</h3>
-                <div class="list-group">
-                    <h5 class="list-group-item">📊 额度管理</h5>
-                    <ul>
-                        <li>查看管理（陪护假类型）</li>
-                        <li>查看员工（陪护假名称）</li>
-                        <li>额度预警（年/日/时）</li>
-                        <li>额度使用记录</li>
-                    </ul>
-                    
-                    <h5 class="list-group-item">📋 员工管理</h5>
-                    <ul>
-                        <li>新建陪护假申请（需要签核）</li>
-                        <li>签核流程管理</li>
-                        <li>签核完成状态更新</li>
-                        <li>审核批准管理</li>
-                    </ul>
-                    
-                    <h5 class="list-group-item">🔐 数据库</h5>
-                    <ul>
-                        <li>额度表（TNA_TBL_EMPLQUOTA）</li>
-                        <li>员工表（TNA_TBL_EMPVL）</li>
-                        <li>区域配置</li>
-                    </ul>
-                </div>
-                
-                <h3>💻 技术栈</h3>
-                <div class="list-group">
-                    <h5 class="list-group-item">后端</h5>
-                    <ul>
-                        <li>.NET 8.0</li>
-                        <li>ASP.NET Core Web API</li>
-                        <li>Entity Framework Core</li>
-                        <li>Oracle 数据库</li>
-                        <li>Serilog 日志</li>
-                        <li>Swagger API 文档</li>
-                    </ul>
-                    
-                    <h5 class="list-group-item">前端</h5>
-                    <ul>
-                        <li>Blazor WebAssembly</li>
-                        <li>Bootstrap 5 美观界面</li>
-                        <li>.NET 8.0 运行时</li>
-                    </ul>
-                    
-                    <h5 class="list-group-item">部署</h5>
-                    <ul>
-                        <li>Docker 容器化</li>
-                        <li>Docker Compose 多环境</li>
-                        <li>GitHub Actions CI/CD</li>
-                    </ul>
-                </div>
-            </div>
+    <div class="app-container">
+        <div class="loading-card">
+            <i class="fas fa-clock logo-icon"></i>
+            <h1 class="display-4">Loading...</h1>
+            <p class="text-muted">假勤额度管理系统正在加载</p>
+            <div class="spinner"></div>
+            <p class="loading-text">Please wait while we set up your environment...</p>
         </div>
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // 简单的页面加载提示
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('Fake Quota Management System loaded');
-            });
-        </script>
+    </div>
+    
+    <script>
+        setTimeout(function() {
+            window.location.href = '/';
+        }, 3000);
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

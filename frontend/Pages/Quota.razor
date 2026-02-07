@@ -1,0 +1,166 @@
+@page "/quota"
+@model "FakeQuotaSystem.Models.EmplQuota"
+
+<div class="container">
+    <h1 class="display-4">📊 额度管理</h1>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>📋 额度概览</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="alert alert-primary">
+                                <strong>4</strong>
+                                <p class="mb-0">区域总数</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="alert alert-success">
+                                <strong>4</strong>
+                                <p class="mb-0">总应用数</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="alert alert-warning">
+                                <strong>15</strong>
+                                <p class="mb-0">待审核数</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="alert alert-info">
+                                <strong>85</strong>
+                                <p class="mb-0">活跃应用数</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>📊 额度使用统计</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h4>年度额度</h4>
+                            <p class="display-4 text-primary">1,460,000</p>
+                            <p class="text-muted">已使用：923,000 (63.2%)</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h4>月度额度</h4>
+                            <p class="display-4 text-success">120,000</p>
+                            <p class="text-muted">已使用：64,000 (53.3%)</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h4>日均使用</h4>
+                            <p class="display-4 text-info">4,000</p>
+                            <p class="text-muted">已使用：2,700 (67.5%)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3>📋 区域额度列表</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>区域</th>
+                        <th>配额序号</th>
+                        <th>年份</th>
+                        <th>应用类型</th>
+                        <th>天额度</th>
+                        <th>时额度</th>
+                        <th>年额度</th>
+                        <th>已使用</th>
+                        <th>使用率</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge bg-primary">北京</span></td>
+                        <td>1</td>
+                        <td>2025</td>
+                        <td>年度</td>
+                        <td>365</td>
+                        <td>8,760</td>
+                        <td>1,460,000</td>
+                        <td>923,000</td>
+                        <td>63.2%</td>
+                        <td><span class="badge bg-success">活跃</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-secondary">深圳</span></td>
+                        <td>1</td>
+                        <td>2025</td>
+                        <td>年度</td>
+                        <td>365</td>
+                        <td>8,760</td>
+                        <td>1,460,000</td>
+                        <td>537,000</td>
+                        <td>36.8%</td>
+                        <td><span class="badge bg-success">活跃</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-warning">北京护理</span></td>
+                        <td>1</td>
+                        <td>2025</td>
+                        <td>年度</td>
+                        <td>365</td>
+                        <td>8,760</td>
+                        <td>1,460,000</td>
+                        <td>657,000</td>
+                        <td>45.0%</td>
+                        <td><span class="badge bg-info">正常</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-success">深圳护理</span></td>
+                        <td>1</td>
+                        <td>2025</td>
+                        <td>年度</td>
+                        <td>365</td>
+                        <td>8,760</td>
+                        <td>1,460,000</td>
+                        <td>584,000</td>
+                        <td>40.0%</td>
+                        <td><span class="badge bg-success">活跃</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <button class="btn btn-primary">
+            <span class="oi oi-plus"></span> 新增额度类型
+        </button>
+    </div>
+</div>
